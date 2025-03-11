@@ -1,0 +1,19 @@
+@startuml Retinal Disease Detection Workflow
+
+start
+
+:Patient uploads retinal image;
+
+:Deep Learning System analyzes image;
+
+:System classifies disease;
+
+:System provides diagnosis;
+
+:Healthcare provider reviews results;
+
+:Store patient data;
+
+stop
+
+@enduml 
