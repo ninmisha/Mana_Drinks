@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mana Yerba Mate{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-white">
+    <!-- Top Navigation -->
+    <nav class="bg-white fixed w-full z-50 top-0 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo and Main Nav -->
+                <div class="flex items-center">
+                    <a href="/" class="flex-shrink-0">
+                        <img class="h-12 w-auto object-contain" src="{{ url_for('static', filename='images/logo.png') }}" alt="Mana">
+                    </a>
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="/shop" class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Shop</a>
+                        <a href="/flavours" class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Flavors</a>
+                        <a href="/subscription" class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Subscription</a>
+                        <a href="/points-of-sale" class="text-gray-900 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Points of Sale</a>
+                    </div>
+                </div>
+
+                <!-- Right Navigation -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <a href="/cart" class="relative inline-flex items-center px-4 py-2">
+                            <i class="fas fa-shopping-cart text-gray-900 text-xl"></i>
+                            <span id="cart-count" class="absolute -top-1 -right-1 bg-indigo-600 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs">0</span>
+                        </a>
+                    </div>
+                    <div class="hidden md:ml-4 md:flex md:items-center">
+                        <button class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700">
+                            Subscribe
+                        </button>
+                    </div>
+                    <!-- Language Selector -->
+                    <div class="ml-4 relative">
+                        <select class="appearance-none bg-transparent border-none text-gray-700 py-2 pl-3 pr-8 rounded">
+                            <option value="en">EN</option>
+                            <option value="fr">FR</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="flex items-center md:hidden">
+                    <button type="button" class="mobile-menu-button inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="hidden mobile-menu md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/shop" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Shop</a>
+                <a href="/flavors" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Flavors</a>
+                <a href="/subscription" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Subscription</a>
+                <a href="/points-of-sale" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Points of Sale</a>
+            </div>
+        </div>
+    </nav>
+
+    
+    <!-- Main Content -->
+    <main class="mt-16">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Shop</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/shop" class="text-gray-600 hover:text-gray-900">All Products</a></li>
+                        <li><a href="/subscription" class="text-gray-600 hover:text-gray-900">Subscription</a></li>
+                        <li><a href="/points-of-sale" class="text-gray-600 hover:text-gray-900">Points of Sale</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Learn</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/about" class="text-gray-600 hover:text-gray-900">About Yerba Mate</a></li>
+                        <li><a href="/faq" class="text-gray-600 hover:text-gray-900">FAQ</a></li>
+                        <li><a href="/blog" class="text-gray-600 hover:text-gray-900">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/contact" class="text-gray-600 hover:text-gray-900">Contact Us</a></li>
+                        <li><a href="/wholesale" class="text-gray-600 hover:text-gray-900">Wholesale</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-600 hover:text-gray-900"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-gray-900"><i class="fab fa-facebook text-xl"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-gray-900"><i class="fab fa-twitter text-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <p class="text-center text-gray-400">&copy; 2024 Mana Yerba Mate. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

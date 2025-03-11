@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Cart - Mana Yerba Mate{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Cart Items -->
+        <div class="lg:col-span-2">
+            <div id="cart-items" class="space-y-4">
+                <!-- Cart items will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Subtotal</span>
+                        <span id="subtotal" class="text-gray-900">$0.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Shipping</span>
+                        <span id="shipping" class="text-gray-900">$5.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Tax</span>
+                        <span id="tax" class="text-gray-900">$0.00</span>
+                    </div>
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between">
+                            <span class="text-lg font-semibold">Total</span>
+                            <span id="total" class="text-lg font-semibold">$0.00</span>
+                        </div>
+                    </div>
+                    <button id="checkout-button" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors duration-300">
+                        Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty Cart Message -->
+    <div id="empty-cart" class="hidden text-center py-12">
+        <i class="fas fa-shopping-cart text-gray-400 text-6xl mb-4"></i>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Your cart is empty</h2>
+        <p class="text-gray-600 mb-8">Add some products to your cart and they will appear here</p>
+        <a href="/shop" class="inline-block bg-indigo-600 text-white py-3 px-8 rounded-lg hover:bg-indigo-700 transition-colors duration-300">
+            Continue Shopping
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadCart();
+});
+
+function loadCart() {
+    fetch('/api/cart')
+        .then(response => response.json())
+        .then(cart => {
+            const cartItems = document.getElementById('cart-items');
+            const emptyCart = document.getElementById('empty-cart');
+            
+            if (cart.length === 0) {
+                cartItems.parentElement.parentElement.classList.add('hidden');
+                emptyCart.classList.remove('hidden');
+                return;
+            }
+
+            cartItems.parentElement.parentElement.classList.remove('hidden');
+            emptyCart.classList.add('hidden');
+            
+            cartItems.innerHTML = cart.map(item => `
+                <div class="bg-white rounded-lg shadow p-6 animate-fade-in">
+                    <div class="flex items-center">
+                        <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded">
+                        <div class="ml-6 flex-1">
+                            <h3 class="text-lg font-semibold text-gray-900">${item.name}</h3>
+                            <p class="text-gray-600">$${item.price.toFixed(2)}</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center border rounded">
+                                <button onclick="updateQuantity('${item.product_id}', ${item.quantity - 1})" 
+                                        class="px-3 py-1 hover:bg-gray-100">-</button>
+                                <span class="px-3 py-1 border-x">${item.quantity}</span>
+                                <button onclick="updateQuantity('${item.product_id}', ${item.quantity + 1})"
+                                        class="px-3 py-1 hover:bg-gray-100">+</button>
+                            </div>
+                            <button onclick="removeFromCart('${item.product_id}')"
+                                    class="text-red-600 hover:text-red-800">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            updateTotals(cart);
+        })
+        .catch(error => console.error('Error loading cart:', error));
+}
+
+function updateTotals(cart) {
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const shipping = cart.length > 0 ? 5.00 : 0;
+    const tax = subtotal * 0.13; // 13% tax
+
+    document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+    document.getElementById('shipping').textContent = `$${shipping.toFixed(2)}`;
+    document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+    document.getElementById('total').textContent = `$${(subtotal + shipping + tax).toFixed(2)}`;
+}
+
+function updateQuantity(productId, quantity) {
+    fetch('/api/cart/update', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: quantity
+        })
+    })
+    .then(response => response.json())
+    .then(() => loadCart())
+    .catch(error => console.error('Error updating quantity:', error));
+}
+
+function removeFromCart(productId) {
+    fetch('/api/cart/remove', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            product_id: productId
+        })
+    })
+    .then(response => response.json())
+    .then(() => loadCart())
+    .catch(error => console.error('Error removing item:', error));
+}
+
+document.getElementById('checkout-button').addEventListener('click', function() {
+    // Implement checkout functionality
+    alert('Checkout functionality will be implemented here');
+});
+</script>
+{% endblock %} 

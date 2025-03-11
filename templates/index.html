@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900">
+    <div class="absolute inset-0 z-0 flex items-center justify-center">
+        <img src="https://manayerbamate.com/cdn/shop/files/left_5a17133c-fc16-4907-af73-f964dc926e47_700x750_crop_center.jpg?v=1672091045"
+             alt="Mana Yerba Mate Products" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/70"></div>
+    </div>
+    
+    <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
+        <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
+            <span class="block">Infused with Bio</span>
+            <span class="block text-indigo-400">energy</span>
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">
+            Experience the natural energy of Yerba Mate
+        </p>
+        <a href="/shop" class="inline-block bg-indigo-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-indigo-700 transition-colors duration-300">
+            Shop Now
+        </a>
+    </div>
+
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <i class="fas fa-chevron-down text-white text-2xl"></i>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Why Choose Mana?</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            <div class="text-center group hover:transform hover:scale-105 transition-all duration-300">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center shadow-lg group-hover:bg-indigo-600 transition-colors duration-300">
+                    <i class="fas fa-bolt text-3xl text-indigo-600 group-hover:text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Without the crash</h3>
+                <p class="text-gray-600">A gentle wave of energy. To get you going without the crash.</p>
+            </div>
+            <div class="text-center group hover:transform hover:scale-105 transition-all duration-300">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center shadow-lg group-hover:bg-indigo-600 transition-colors duration-300">
+                    <i class="fas fa-leaf text-3xl text-indigo-600 group-hover:text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Natural caffeine</h3>
+                <p class="text-gray-600">Certified organic caffeine from the plant. A gift from Mother Nature.</p>
+            </div>
+            <div class="text-center group hover:transform hover:scale-105 transition-all duration-300">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center shadow-lg group-hover:bg-indigo-600 transition-colors duration-300">
+                    <i class="fas fa-shield-alt text-3xl text-indigo-600 group-hover:text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Antioxidant</h3>
+                <p class="text-gray-600">Richer in antioxidants than tea. Not bad.</p>
+            </div>
+            <div class="text-center group hover:transform hover:scale-105 transition-all duration-300">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center shadow-lg group-hover:bg-indigo-600 transition-colors duration-300">
+                    <i class="fas fa-seedling text-3xl text-indigo-600 group-hover:text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Vegan</h3>
+                <p class="text-gray-600">A plant-based drink that tastes like heaven.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section -->
+<section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Our Products</h2>
+            <p class="mt-4 text-xl text-gray-600">Discover our refreshing flavors</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="products-grid">
+            <!-- Products will be dynamically loaded here -->
+        </div>
+    </div>
+</section>
+
+<!-- Subscription Banner -->
+<section class="bg-indigo-600 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center text-white">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Never Run Out of Energy</h2>
+            <p class="text-xl mb-8">Subscribe and save 10% on every order</p>
+            <a href="/subscription" class="inline-block bg-white text-indigo-600 px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-colors duration-300">
+                Start Subscription
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch products from the API
+    fetch('/api/products')
+        .then(response => response.json())
+        .then(products => {
+            const productsGrid = document.getElementById('products-grid');
+            products.forEach(product => {
+                const productElement = createProductCard(product);
+                productsGrid.appendChild(productElement);
+            });
+        })
+        .catch(error => console.error('Error loading products:', error));
+});
+
+function createProductCard(product) {
+    const div = document.createElement('div');
+    div.className = 'group relative bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2';
+    div.innerHTML = `
+        <div class="relative h-80 w-full overflow-hidden">
+            <img src="${product.image}" 
+                 alt="${product.name}" 
+                 class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-300">
+        </div>
+        <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                <a href="/products/${product._id}" class="hover:text-indigo-600">
+                    ${product.name}
+                </a>
+            </h3>
+            <p class="text-gray-600 mb-4">${product.description}</p>
+            <div class="flex items-center justify-between">
+                <span class="text-lg font-bold text-gray-900">$${product.price.toFixed(2)}</span>
+                <button onclick="addToCart('${product._id}')" 
+                        class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition-colors duration-300">
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    `;
+    return div;
+}
+
+function addToCart(productId) {
+    // Implement cart functionality
+    const cartCount = document.getElementById('cart-count');
+    const currentCount = parseInt(cartCount.textContent);
+    cartCount.textContent = currentCount + 1;
+    
+    // Animation effect
+    cartCount.classList.add('scale-150');
+    setTimeout(() => cartCount.classList.remove('scale-150'), 200);
+}
+
+// Smooth scroll for arrow button
+document.querySelector('.fa-chevron-down').parentElement.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.scrollTo({
+        top: window.innerHeight,
+        behavior: 'smooth'
+    });
+});
+</script>
+{% endblock %} 
